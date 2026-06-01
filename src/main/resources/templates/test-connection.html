@@ -6,14 +6,31 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
+
             <div class="card shadow-sm">
-                <div class="card-header bg-dark text-white">
+
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+
                     <h3 class="card-title mb-0">Vérification technique - Séance 1</h3>
+
+                    <div class="text-end small" th:if="${session.user != null}">
+                        <div>
+                            Connecté :
+                            <strong th:text="${session.user.username}">user</strong>
+                        </div>
+                        <div class="text-white-50">
+                            rôle : <span th:text="${session.user.roles}">roles</span>
+                        </div>
+                    </div>
+
                 </div>
+
                 <div class="card-body text-center">
+
                     <div class="alert alert-success" role="alert" th:if="${status == 'Succès'}">
                         <h4 class="alert-heading">Connexion Établie !</h4>
                         <p th:text="${message}"></p>
@@ -31,9 +48,12 @@
 
                     <a class="btn btn-primary mt-4" href="/test-db">Recharger le test</a>
                 </div>
+
             </div>
+
         </div>
     </div>
 </div>
+
 </body>
 </html>

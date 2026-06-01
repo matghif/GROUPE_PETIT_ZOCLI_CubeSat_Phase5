@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>NanoOrbit - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand fw-bold text-info" href="#">NANOORBIT EOS</a>
+
+        <div class="d-flex align-items-center text-white">
+                <span class="me-3">
+                    Utilisateur : <strong class="text-info" th:text="${username}">User</strong>
+                    (<span class="badge bg-secondary" th:text="${role}">Role</span>)
+                </span>
+            <a class="btn btn-sm btn-outline-danger" th:href="@{/logout}">Déconnexion</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="p-5 mb-4 bg-white rounded-3 shadow-sm border">
+        <div class="container-fluid py-2">
+            <h1 class="display-5 fw-bold text-dark">Système d'Opérations Spatial</h1>
+            <p class="col-md-8 fs-4 text-muted">Bienvenue sur l'interface de contrôle NanoOrbit. Vos composants
+                d'architecture et vos accès BDD sont opérationnels.</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-5">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h5 class="card-title mb-0 text-secondary fw-bold">Validation Séance 1 — Liste brute des Satellites</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0 align-middle">
+                    <thead class="table-dark">
+                    <tr>
+                        <th class="ps-4">Identifiant</th>
+                        <th>Nom du Satellite</th>
+                        <th>Format CubeSat</th>
+                        <th class="pe-4">Date de Lancement</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="sat : ${satellites}">
+                        <td class="ps-4 fw-bold text-secondary" th:text="${sat.id_satellite}">SAT-001</td>
+                        <td th:text="${sat.nom_satellite}">Alpha</td>
+                        <td>
+                            <span class="badge bg-primary text-wrap" th:text="${sat.format_cube_sat}">3U</span>
+                        </td>
+                        <td class="pe-4 text-muted" th:text="${sat.date_lancement}">2026-01-01</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer mt-auto py-3 bg-white border-top text-center text-muted">
+    <div class="container">
+        <small>EFREI 1re année Cycle Ingénieur — Projet Bases de Données</small>
+    </div>
+</footer>
+</body>
+</html>
