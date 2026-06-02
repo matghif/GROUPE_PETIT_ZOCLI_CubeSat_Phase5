@@ -1,0 +1,31 @@
+package fr.efrei.nanoorbit.constant;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class SqlQueries {
+
+    public static final String TABLE_SATELLITES =
+            "SELECT id_satellite, nom_satellite, format_cube_sat, date_lancement FROM Satellite";
+
+    public static final String VIEW_ALERTES =
+            "SELECT * FROM vue_alertes_instruments";
+
+    public static final String VIEW_COMMUNICATIONS =
+            "SELECT * FROM vue_bilan_communications";
+
+    public static final String VIEW_MISSIONS =
+            "SELECT * FROM vue_tableau_de_bord_missions";
+
+    public static final String VIEW_OPERATIONNELS =
+            "SELECT * FROM vue_satellites_operationnels";
+
+    public static final String VIEW_HISTORIQUE =
+            "SELECT f.date_heure_debut, f.duree, s.nom_satellite, s2.nom_station, s3.nom_statut \n" +
+                    "FROM fenetrecommunication f\n" +
+                    "INNER JOIN satellite s ON s.id_satellite = f.id_satellite  \n" +
+                    "INNER JOIN station s2 ON s2.id_station = f.id_station\n" +
+                    "INNER JOIN statut s3 ON s3.id_statut = f.id_statut AND s3.nom_statut = 'Realisee' AND s3.type_statut = 'FenetreCommunication'\n" +
+                    "ORDER BY f.date_heure_debut desc ;";
+}
