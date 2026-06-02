@@ -10,7 +10,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-fluid px-4">
         <a class="navbar-brand fw-bold text-info" href="#">NANOORBIT EOS</a>
-
         <div class="d-flex align-items-center text-white">
                 <span class="me-3">
                     Utilisateur : <strong class="text-info" th:text="${username}">User</strong>
@@ -30,33 +29,117 @@
         </div>
     </div>
 
+    <ul class="nav nav-pills mb-4">
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${vueActive == 'brute' ? 'active' : ''}" th:href="@{/dashboard}">Liste
+                des satellites</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${vueActive == 'alertes' ? 'active' : ''}" th:href="@{/vue/alertes}">Alertes
+                Instruments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${vueActive == 'communications' ? 'active' : ''}"
+               th:href="@{/vue/communications}">Bilan Communications</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${vueActive == 'missions' ? 'active' : ''}" th:href="@{/vue/missions}">Missions
+                Publiques</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${vueActive == 'operationnels' ? 'active' : ''}"
+               th:href="@{/vue/operationnels}">Satellites Opérationnels</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link fw-bold text-warning"
+               th:classappend="${vueActive == 'historique' ? 'active bg-warning text-dark border-warning' : ''}"
+               th:href="@{/vue/historique}">Historique</a>
+        </li>
+    </ul>
+
+    <div class="alert alert-danger d-flex justify-content-between align-items-center mb-4 shadow-sm border-start border-danger border-4"
+         th:if="${vueActive == 'alertes' and compteurCritique != null}">
+        <div>
+            <h4 class="alert-heading mb-1 fw-bold text-danger">Statut des Instruments</h4>
+            <p class="mb-0 text-muted">Analyse en temps réel des anomalies et niveaux de vigilance du système
+                orbital.</p>
+        </div>
+        <div class="bg-danger text-white rounded px-4 py-2 text-center shadow-sm">
+            <span class="fs-2 fw-bold d-block lh-1" th:text="${compteurCritique}">0</span>
+            <small class="text-uppercase fw-bold" style="font-size: 0.65rem;">Critiques</small>
+        </div>
+    </div>
+
     <div class="card shadow-sm border-0 mb-5">
         <div class="card-header bg-white py-3 border-bottom">
-            <h5 class="card-title mb-0 text-secondary fw-bold">Validation Séance 1 — Liste brute des Satellites</h5>
+            <h5 class="card-title mb-0 text-secondary fw-bold" th:text="${titreVue}"></h5>
         </div>
         <div class="card-body p-0">
-            <div class="table-responsive">
+
+            <div class="table-responsive" th:if="${donnees != null and !donnees.isEmpty()}">
                 <table class="table table-hover table-striped mb-0 align-middle">
                     <thead class="table-dark">
                     <tr>
-                        <th class="ps-4">Identifiant</th>
-                        <th>Nom du Satellite</th>
-                        <th>Format CubeSat</th>
-                        <th class="pe-4">Date de Lancement</th>
+                        <th class="px-4 text-capitalize" th:each="colonne : ${donnees[0].keySet()}"
+                            th:text="${colonne}"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="sat : ${satellites}">
-                        <td class="ps-4 fw-bold text-secondary" th:text="${sat.id_satellite}">SAT-001</td>
-                        <td th:text="${sat.nom_satellite}">Alpha</td>
-                        <td>
-                            <span class="badge bg-primary text-wrap" th:text="${sat.format_cube_sat}">3U</span>
+                    <tr th:classappend="${vueActive == 'communications' and iterStat.first} ? 'table-warning fw-bold' : (${isSousDotee} ? 'table-danger' : '')"
+                        th:each="ligne, iterStat : ${donnees}"
+                        th:with="
+                            nbSat=${ligne['satellites_operationnels'] != null ? ligne['satellites_operationnels'] : (ligne['nb_satellites'] != null ? ligne['nb_satellites'] : (ligne['satellites'] != null ? ligne['satellites'] : 0))},
+                            nbPart=${ligne['participants'] != null ? ligne['participants'] : (ligne['nb_participants'] != null ? ligne['nb_participants'] : (ligne['nombre_participants'] != null ? ligne['nombre_participants'] : 0))},
+                            isSousDotee=${vueActive == 'missions' and #conversions.convert(nbSat, 'java.lang.Long') < #conversions.convert(nbPart, 'java.lang.Long')}
+                        ">
+
+                        <td class="px-4" th:each="entree : ${ligne}">
+
+                            <th:block
+                                    th:if="${entree.key.toLowerCase() == 'format_cube_sat' or entree.key.toLowerCase() == 'format'}">
+                                <span class="badge bg-success text-white px-3 py-2 fw-bold"
+                                      th:if="${entree.value == '1U'}">1U</span>
+                                <span class="badge bg-info text-dark px-3 py-2 fw-bold" th:if="${entree.value == '3U'}">3U</span>
+                                <span class="badge bg-warning text-dark px-3 py-2 fw-bold"
+                                      th:if="${entree.value == '6U'}">6U</span>
+                                <span class="badge bg-danger text-white px-3 py-2 fw-bold"
+                                      th:if="${entree.value == '12U'}">12U</span>
+                                <span class="badge bg-secondary text-white px-3 py-2 fw-bold"
+                                      th:if="${entree.value != '1U' and entree.value != '3U' and entree.value != '6U' and entree.value != '12U'}"
+                                      th:text="${entree.value}"></span>
+                            </th:block>
+
+                            <th:block th:if="${entree.key.toLowerCase().contains('priorit')}">
+                                <span class="badge bg-danger text-white px-3 py-2 fw-bold"
+                                      th:if="${entree.value == 'CRITIQUE'}">CRITIQUE</span>
+                                <span class="badge bg-warning text-dark px-3 py-2 fw-bold"
+                                      th:if="${entree.value == 'SURVEILLANCE'}">SURVEILLANCE</span>
+                                <span th:if="${entree.value != 'CRITIQUE' and entree.value != 'SURVEILLANCE'}"
+                                      th:text="${entree.value}"></span>
+                            </th:block>
+
+                            <th:block
+                                    th:if="${entree.key.toLowerCase() != 'format_cube_sat' and entree.key.toLowerCase() != 'format' and !entree.key.toLowerCase().contains('priorit')}">
+                                <span th:text="${entree.value}"></span>
+
+                                <span class="badge bg-dark text-info ms-2"
+                                      th:if="${vueActive == 'communications' and (entree.key.toLowerCase() == 'nom_satellite' or entree.key.toLowerCase() == 'id_satellite') and iterStat.first}">Plus Actif</span>
+
+                                <span class="badge bg-danger ms-2 text-uppercase"
+                                      style="font-size: 0.7rem;"
+                                      th:if="${vueActive == 'missions' and (entree.key.toLowerCase() == 'nom_mission' or entree.key.toLowerCase() == 'id_mission' or entree.key.toLowerCase() == 'nom') and isSousDotee}">Sous-dotée</span>
+                            </th:block>
+
                         </td>
-                        <td class="pe-4 text-muted" th:text="${sat.date_lancement}">2026-01-01</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
+
+            <div class="p-4 text-center text-muted" th:if="${donnees == null or donnees.isEmpty()}">
+                Aucun enregistrement disponible pour cette vue.
+            </div>
+
         </div>
     </div>
 </div>
