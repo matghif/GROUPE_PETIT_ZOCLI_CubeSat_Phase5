@@ -22,14 +22,14 @@ public class DashboardService {
         switch (vueName) {
             case "alertes":
                 return "Alertes Instruments";
-            case "communication":
-                return "Bilan des communications";
+            case "communications":
+                return "Bilan des communications par satellite";
             case "missions":
-                return "Mission";
+                return "Tableau de bord des missions";
             case "operationnels":
-                return "Satellites Opérationnels";
+                return "Tableau de bord des satellites opérationnels";
             case "historique":
-                return "Historique des Fenêtres de Communication";
+                return "Historique des fenêtres de communication";
             default:
                 return "Liste des satellites";
 
