@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>NanoOrbit - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-light">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
@@ -31,11 +33,13 @@
 
     <ul class="nav nav-pills mb-4">
         <li class="nav-item">
-            <a class="nav-link" th:classappend="${vueActive == 'brute' ? 'active' : ''}" th:href="@{/dashboard}">Liste
+            <a class="nav-link" th:classappend="${vueActive == 'brute' ? 'active' : ''}"
+               th:href="@{/dashboard}">Liste
                 des satellites</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" th:classappend="${vueActive == 'alertes' ? 'active' : ''}" th:href="@{/vue/alertes}">Alertes
+            <a class="nav-link" th:classappend="${vueActive == 'alertes' ? 'active' : ''}"
+               th:href="@{/vue/alertes}">Alertes
                 Instruments</a>
         </li>
         <li class="nav-item">
@@ -43,7 +47,8 @@
                th:href="@{/vue/communications}">Bilan Communications</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" th:classappend="${vueActive == 'missions' ? 'active' : ''}" th:href="@{/vue/missions}">Missions
+            <a class="nav-link" th:classappend="${vueActive == 'missions' ? 'active' : ''}"
+               th:href="@{/vue/missions}">Missions
                 Publiques</a>
         </li>
         <li class="nav-item">
@@ -86,20 +91,20 @@
                     </thead>
                     <tbody>
                     <tr th:classappend="${vueActive == 'communications' and iterStat.first} ? 'table-warning fw-bold' : (${isSousDotee} ? 'table-danger' : '')"
-                        th:each="ligne, iterStat : ${donnees}"
-                        th:with="
-                            nbSat=${ligne['satellites_operationnels'] != null ? ligne['satellites_operationnels'] : (ligne['nb_satellites'] != null ? ligne['nb_satellites'] : (ligne['satellites'] != null ? ligne['satellites'] : 0))},
-                            nbPart=${ligne['participants'] != null ? ligne['participants'] : (ligne['nb_participants'] != null ? ligne['nb_participants'] : (ligne['nombre_participants'] != null ? ligne['nombre_participants'] : 0))},
-                            isSousDotee=${vueActive == 'missions' and #conversions.convert(nbSat, 'java.lang.Long') < #conversions.convert(nbPart, 'java.lang.Long')}
-                        ">
+                        th:each="ligne, iterStat : ${donnees}" th:with="
+                                nbSatOp=${ligne['nombre_de_satellites_operationnels'] != null ? ligne['nombre_de_satellites_operationnels'] : (ligne['NOMBRE_DE_SATELLITES_OPERATIONNELS'] != null ? ligne['NOMBRE_DE_SATELLITES_OPERATIONNELS'] : 0)},
+                                nbSatPart=${ligne['nombre_de_satellites_participants'] != null ? ligne['nombre_de_satellites_participants'] : (ligne['NOMBRE_DE_SATELLITES_PARTICIPANTS'] != null ? ligne['NOMBRE_DE_SATELLITES_PARTICIPANTS'] : 0)},
+                                isSousDotee=${vueActive == 'missions' and #conversions.convert(nbSatOp, 'java.lang.Long') < #conversions.convert(nbSatPart, 'java.lang.Long')}
+                            ">
 
                         <td class="px-4" th:each="entree : ${ligne}">
 
                             <th:block
                                     th:if="${entree.key.toLowerCase() == 'format_cube_sat' or entree.key.toLowerCase() == 'format'}">
-                                <span class="badge bg-success text-white px-3 py-2 fw-bold"
-                                      th:if="${entree.value == '1U'}">1U</span>
-                                <span class="badge bg-info text-dark px-3 py-2 fw-bold" th:if="${entree.value == '3U'}">3U</span>
+                                        <span class="badge bg-success text-white px-3 py-2 fw-bold"
+                                              th:if="${entree.value == '1U'}">1U</span>
+                                <span class="badge bg-info text-dark px-3 py-2 fw-bold"
+                                      th:if="${entree.value == '3U'}">3U</span>
                                 <span class="badge bg-warning text-dark px-3 py-2 fw-bold"
                                       th:if="${entree.value == '6U'}">6U</span>
                                 <span class="badge bg-danger text-white px-3 py-2 fw-bold"
@@ -110,8 +115,8 @@
                             </th:block>
 
                             <th:block th:if="${entree.key.toLowerCase().contains('priorit')}">
-                                <span class="badge bg-danger text-white px-3 py-2 fw-bold"
-                                      th:if="${entree.value == 'CRITIQUE'}">CRITIQUE</span>
+                                        <span class="badge bg-danger text-white px-3 py-2 fw-bold"
+                                              th:if="${entree.value == 'CRITIQUE'}">CRITIQUE</span>
                                 <span class="badge bg-warning text-dark px-3 py-2 fw-bold"
                                       th:if="${entree.value == 'SURVEILLANCE'}">SURVEILLANCE</span>
                                 <span th:if="${entree.value != 'CRITIQUE' and entree.value != 'SURVEILLANCE'}"
@@ -123,11 +128,11 @@
                                 <span th:text="${entree.value}"></span>
 
                                 <span class="badge bg-dark text-info ms-2"
-                                      th:if="${vueActive == 'communications' and (entree.key.toLowerCase() == 'nom_satellite' or entree.key.toLowerCase() == 'id_satellite') and iterStat.first}">Plus Actif</span>
+                                      th:if="${vueActive == 'communications' and (entree.key.toLowerCase() == 'nom_satellite' or entree.key.toLowerCase() == 'id_satellite') and iterStat.first}">Plus
+                                            Actif</span>
 
-                                <span class="badge bg-danger ms-2 text-uppercase"
-                                      style="font-size: 0.7rem;"
-                                      th:if="${vueActive == 'missions' and (entree.key.toLowerCase() == 'nom_mission' or entree.key.toLowerCase() == 'id_mission' or entree.key.toLowerCase() == 'nom') and isSousDotee}">Sous-dotée</span>
+                                <span class="badge bg-danger ms-2 text-uppercase" style="font-size: 0.7rem;"
+                                      th:if="${vueActive == 'missions' and (entree.key.toLowerCase() == 'id_mission') and isSousDotee}">Sous-dotée</span>
                             </th:block>
 
                         </td>
@@ -150,4 +155,5 @@
     </div>
 </footer>
 </body>
+
 </html>
