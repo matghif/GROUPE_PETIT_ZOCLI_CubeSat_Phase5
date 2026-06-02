@@ -9,19 +9,19 @@ public final class SqlQueries {
     public static final String TABLE_SATELLITES =
             "SELECT id_satellite, nom_satellite, format_cube_sat, date_lancement FROM Satellite";
 
-    public static final String VIEW_ALERTES =
+    public static final String VUE_ALERTES_INSTRUMENTS =
             "SELECT * FROM vue_alertes_instruments";
 
-    public static final String VIEW_COMMUNICATIONS =
+    public static final String VUE_BILAN_COMMUNICATIONS =
             "SELECT * FROM vue_bilan_communications";
 
-    public static final String VIEW_MISSIONS =
+    public static final String VUE_TABLEAU_DE_BORD_MISSIONS =
             "SELECT * FROM vue_tableau_de_bord_missions";
 
-    public static final String VIEW_OPERATIONNELS =
+    public static final String VUE_SATELLITES_OPERATIONNELS =
             "SELECT * FROM vue_satellites_operationnels";
 
-    public static final String VIEW_HISTORIQUE =
+    public static final String VUE_HISTORIQUE =
             "SELECT f.date_heure_debut, f.duree, s.nom_satellite, s2.nom_station, s3.nom_statut \n" +
                     "FROM fenetrecommunication f\n" +
                     "INNER JOIN satellite s ON s.id_satellite = f.id_satellite  \n" +
