@@ -41,7 +41,7 @@ public class LoginController {
             String detectRole = "analyste_data"; // Rôle par défaut si aucun privilège global n'est trouvé
 
             try (PreparedStatement stmt = conn.prepareStatement(sqlRole)) {
-                stmt.setString(1, "'" + username + "'@'%'");
+                stmt.setString(1, "'" + username + "'@'localhost'");
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         String grantee = rs.getString("GRANTEE");

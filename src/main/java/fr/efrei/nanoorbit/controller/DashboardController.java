@@ -1,5 +1,6 @@
 package fr.efrei.nanoorbit.controller;
 
+import fr.efrei.nanoorbit.constant.SqlQueries;
 import fr.efrei.nanoorbit.model.User;
 import fr.efrei.nanoorbit.service.DashboardService;
 import jakarta.servlet.http.HttpSession;
@@ -29,7 +30,7 @@ public class DashboardController {
             return "redirect:/login";
         }
 
-        String sql = "SELECT id_satellite, nom_satellite, format_cube_sat, date_lancement FROM Satellite";
+        String sql = SqlQueries.TABLE_SATELLITES;
         List<Map<String, Object>> satellites = jdbcTemplate.queryForList(sql);
 
         model.addAttribute("username", loggedInUser.getUsername());
