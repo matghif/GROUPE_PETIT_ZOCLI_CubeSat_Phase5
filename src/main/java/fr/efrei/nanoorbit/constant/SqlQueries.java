@@ -28,4 +28,10 @@ public final class SqlQueries {
                     "INNER JOIN station s2 ON s2.id_station = f.id_station\n" +
                     "INNER JOIN statut s3 ON s3.id_statut = f.id_statut AND s3.nom_statut = 'Realisee' AND s3.type_statut = 'FenetreCommunication'\n" +
                     "ORDER BY f.date_heure_debut desc ;";
+
+    public static final String INSERT_SATELLITE =
+            "INSERT INTO Satellite (id_satellite, nom_satellite, format_cube_sat, date_lancement) VALUES (?, ?, ?, ?)";
+
+    public static final String DELETE_SATELLITE =
+            "DELETE FROM Satellite WHERE id_satellite = ?";
 }
