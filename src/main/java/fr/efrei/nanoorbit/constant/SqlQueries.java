@@ -13,7 +13,7 @@ public final class SqlQueries {
             "SELECT * FROM vue_alertes_instruments";
 
     public static final String VUE_BILAN_COMMUNICATIONS =
-            "SELECT * FROM vue_bilan_communications";
+            "SELECT * FROM vue_bilan_communications ORDER BY volume_total_telecharge desc";
 
     public static final String VUE_TABLEAU_DE_BORD_MISSIONS =
             "SELECT * FROM vue_tableau_de_bord_missions";
@@ -26,7 +26,7 @@ public final class SqlQueries {
                     "FROM fenetrecommunication f\n" +
                     "INNER JOIN satellite s ON s.id_satellite = f.id_satellite  \n" +
                     "INNER JOIN station s2 ON s2.id_station = f.id_station\n" +
-                    "INNER JOIN statut s3 ON s3.id_statut = f.id_statut AND s3.nom_statut = 'Realisee' AND s3.type_statut = 'FenetreCommunication'\n" +
+                    "INNER JOIN statut s3 ON s3.id_statut = f.id_statut AND s3.type_statut = 'FenetreCommunication'\n" +
                     "ORDER BY f.date_heure_debut desc ;";
 
     public static final String SELECT_SATELLITES_ADMIN =

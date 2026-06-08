@@ -19,7 +19,8 @@
     </span>
 
             <a class="btn btn-sm btn-outline-warning me-2"
-               th:href="@{/admin}" th:if="${role == 'operateur_sat' or role == 'admin_nano' or role == 'resp_mission'}">Espace Admin</a>
+               th:href="@{/admin}" th:if="${role == 'operateur_sat' or role == 'admin_nano' or role == 'resp_mission'}">Espace
+                Admin</a>
 
             <a class="btn btn-sm btn-outline-danger" th:href="@{/logout}">Déconnexion</a>
         </div>
@@ -53,7 +54,7 @@
         <li class="nav-item">
             <a class="nav-link" th:classappend="${vueActive == 'missions' ? 'active' : ''}"
                th:href="@{/vue/missions}">Missions
-                Publiques</a>
+            </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" th:classappend="${vueActive == 'operationnels' ? 'active' : ''}"
