@@ -13,10 +13,14 @@
     <div class="container-fluid px-4">
         <a class="navbar-brand fw-bold text-info" href="#">NANOORBIT EOS</a>
         <div class="d-flex align-items-center text-white">
-                <span class="me-3">
-                    Utilisateur : <strong class="text-info" th:text="${username}">User</strong>
-                    (<span class="badge bg-secondary" th:text="${role}">Role</span>)
-                </span>
+    <span class="me-3">
+        Utilisateur : <strong class="text-info" th:text="${username}">User</strong>
+        (<span class="badge bg-secondary" th:text="${role}">Role</span>)
+    </span>
+
+            <a class="btn btn-sm btn-outline-warning me-2"
+               th:href="@{/admin}" th:if="${role == 'operateur_sat' or role == 'admin_nano' or role == 'resp_mission'}">Espace Admin</a>
+
             <a class="btn btn-sm btn-outline-danger" th:href="@{/logout}">Déconnexion</a>
         </div>
     </div>
@@ -85,8 +89,9 @@
                 <table class="table table-hover table-striped mb-0 align-middle" id="sortableTable">
                     <thead class="table-dark">
                     <tr>
-                        <th class="px-4 text-capitalize sortable-header" style="cursor: pointer; user-select: none;" th:each="colonne : ${donnees[0].keySet()}"
-                            th:text="${colonne}" th:data-column="${colonne}">
+                        <th class="px-4 text-capitalize sortable-header" style="cursor: pointer; user-select: none;"
+                            th:data-column="${colonne}"
+                            th:each="colonne : ${donnees[0].keySet()}" th:text="${colonne}">
                         </th>
                     </tr>
                     </thead>
@@ -160,98 +165,98 @@
 </html>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const sortableHeaders = document.querySelectorAll('.sortable-header');
-    let currentSortColumn = null;
-    let sortDirection = 'asc';
-    const tableData = [];
+    document.addEventListener('DOMContentLoaded', function () {
+        const sortableHeaders = document.querySelectorAll('.sortable-header');
+        let currentSortColumn = null;
+        let sortDirection = 'asc';
+        const tableData = [];
 
-    function initializeTableData() {
-        const tbody = document.querySelector('#sortableTable tbody');
-        const rows = tbody.querySelectorAll('tr');
-        rows.forEach((row, index) => {
-            const cells = row.querySelectorAll('td');
-            const rowData = {};
-            cells.forEach((cell, cellIndex) => {
-                const header = sortableHeaders[cellIndex];
-                const columnName = header.getAttribute('data-column');
-                rowData[columnName] = {
-                    value: cell.textContent.trim(),
-                    html: cell.innerHTML
-                };
+        function initializeTableData() {
+            const tbody = document.querySelector('#sortableTable tbody');
+            const rows = tbody.querySelectorAll('tr');
+            rows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td');
+                const rowData = {};
+                cells.forEach((cell, cellIndex) => {
+                    const header = sortableHeaders[cellIndex];
+                    const columnName = header.getAttribute('data-column');
+                    rowData[columnName] = {
+                        value: cell.textContent.trim(),
+                        html: cell.innerHTML
+                    };
+                });
+                tableData[index] = {html: row.innerHTML, data: rowData};
             });
-            tableData[index] = { html: row.innerHTML, data: rowData };
-        });
-    }
-
-    function sortTable(columnIndex) {
-        const columnName = sortableHeaders[columnIndex].getAttribute('data-column');
-        
-        if (currentSortColumn === columnIndex) {
-            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            sortDirection = 'asc';
-            currentSortColumn = columnIndex;
         }
 
-        
-        tableData.sort((a, b) => {
-            let aValue = a.data[columnName].value;
-            let bValue = b.data[columnName].value;
+        function sortTable(columnIndex) {
+            const columnName = sortableHeaders[columnIndex].getAttribute('data-column');
 
-            const aNum = parseFloat(aValue);
-            const bNum = parseFloat(bValue);
-            
-            if (!isNaN(aNum) && !isNaN(bNum)) {
-                return sortDirection === 'asc' ? aNum - bNum : bNum - aNum;
-            }
-
-            aValue = aValue.toLowerCase();
-            bValue = bValue.toLowerCase();
-            
-            if (sortDirection === 'asc') {
-                return aValue.localeCompare(bValue, 'fr');
+            if (currentSortColumn === columnIndex) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
             } else {
-                return bValue.localeCompare(aValue, 'fr');
+                sortDirection = 'asc';
+                currentSortColumn = columnIndex;
             }
-        });
 
-        const tbody = document.querySelector('#sortableTable tbody');
-        tbody.innerHTML = '';
-        tableData.forEach(row => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = row.html;
-            tbody.appendChild(tr);
-        });
 
-        updateHeaderIndicators(columnIndex);
-    }
+            tableData.sort((a, b) => {
+                let aValue = a.data[columnName].value;
+                let bValue = b.data[columnName].value;
 
-    function updateHeaderIndicators(columnIndex) {
+                const aNum = parseFloat(aValue);
+                const bNum = parseFloat(bValue);
+
+                if (!isNaN(aNum) && !isNaN(bNum)) {
+                    return sortDirection === 'asc' ? aNum - bNum : bNum - aNum;
+                }
+
+                aValue = aValue.toLowerCase();
+                bValue = bValue.toLowerCase();
+
+                if (sortDirection === 'asc') {
+                    return aValue.localeCompare(bValue, 'fr');
+                } else {
+                    return bValue.localeCompare(aValue, 'fr');
+                }
+            });
+
+            const tbody = document.querySelector('#sortableTable tbody');
+            tbody.innerHTML = '';
+            tableData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = row.html;
+                tbody.appendChild(tr);
+            });
+
+            updateHeaderIndicators(columnIndex);
+        }
+
+        function updateHeaderIndicators(columnIndex) {
+            sortableHeaders.forEach((header, index) => {
+                if (index === columnIndex) {
+                    header.style.backgroundColor = '#495057';
+                    header.style.fontWeight = 'bold';
+                    const indicator = sortDirection === 'asc' ? ' ▲' : ' ▼';
+                    header.textContent = header.getAttribute('data-column') + indicator;
+                } else {
+                    header.style.backgroundColor = '';
+                    header.style.fontWeight = 'normal';
+                    header.textContent = header.getAttribute('data-column');
+                }
+            });
+        }
+
         sortableHeaders.forEach((header, index) => {
-            if (index === columnIndex) {
-                header.style.backgroundColor = '#495057';
-                header.style.fontWeight = 'bold';
-                const indicator = sortDirection === 'asc' ? ' ▲' : ' ▼';
-                header.textContent = header.getAttribute('data-column') + indicator;
-            } else {
-                header.style.backgroundColor = '';
-                header.style.fontWeight = 'normal';
-                header.textContent = header.getAttribute('data-column');
-            }
+            header.addEventListener('click', () => sortTable(index));
+            header.addEventListener('mouseover', () => {
+                header.style.backgroundColor = header === sortableHeaders[currentSortColumn] ? '#495057' : '#6c757d';
+            });
+            header.addEventListener('mouseout', () => {
+                header.style.backgroundColor = header === sortableHeaders[currentSortColumn] ? '#495057' : '';
+            });
         });
-    }
 
-    sortableHeaders.forEach((header, index) => {
-        header.addEventListener('click', () => sortTable(index));
-        header.addEventListener('mouseover', () => {
-            header.style.backgroundColor = header === sortableHeaders[currentSortColumn] ? '#495057' : '#6c757d';
-        });
-        header.addEventListener('mouseout', () => {
-            header.style.backgroundColor = header === sortableHeaders[currentSortColumn] ? '#495057' : '';
-        });
+        initializeTableData();
     });
-
-    initializeTableData();
-});
 </script>

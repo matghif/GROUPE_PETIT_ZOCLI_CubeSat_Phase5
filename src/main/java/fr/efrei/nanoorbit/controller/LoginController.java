@@ -23,7 +23,7 @@ public class LoginController {
     @GetMapping("/login")
     public String loginPage(HttpSession session) {
         if (session.getAttribute("user") != null) {
-            return "redirect:/test-db";
+            return "redirect:/dashboard";
         }
         return "login";
     }
@@ -41,7 +41,7 @@ public class LoginController {
             String detectRole = "analyste_data"; // Rôle par défaut si aucun privilège global n'est trouvé
 
             try (PreparedStatement stmt = conn.prepareStatement(sqlRole)) {
-                stmt.setString(1, "'" + username + "'@'localhost'");
+                stmt.setString(1, "'" + username + "'@'%'");
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
                         String grantee = rs.getString("GRANTEE");
