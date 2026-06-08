@@ -29,9 +29,36 @@ public final class SqlQueries {
                     "INNER JOIN statut s3 ON s3.id_statut = f.id_statut AND s3.nom_statut = 'Realisee' AND s3.type_statut = 'FenetreCommunication'\n" +
                     "ORDER BY f.date_heure_debut desc ;";
 
-    public static final String INSERT_SATELLITE =
-            "INSERT INTO Satellite (id_satellite, nom_satellite, format_cube_sat, date_lancement) VALUES (?, ?, ?, ?)";
+    public static final String SELECT_SATELLITES_ADMIN =
+            "SELECT s.id_satellite, s.nom_satellite, s.format_cube_sat, s.date_lancement, st.nom_statut FROM Satellite s JOIN Statut st ON s.id_statut_operationnel = st.id_statut";
 
-    public static final String DELETE_SATELLITE =
-            "DELETE FROM Satellite WHERE id_satellite = ?";
+    public static final String SELECT_STATUTS_SATELLITE =
+            "SELECT id_statut, nom_statut FROM Statut WHERE type_statut = 'Satellite'";
+
+    public static final String UPDATE_SATELLITE_STATUT_BY_ID =
+            "UPDATE Satellite SET id_statut_operationnel = ? WHERE id_satellite = ?";
+
+    public static final String SELECT_SATELLITES_OPERATIONNELS =
+            "SELECT s.id_satellite, s.nom_satellite FROM Satellite s JOIN Statut st ON s.id_statut_operationnel = st.id_statut WHERE st.nom_statut = 'Opérationnel'";
+
+    public static final String SELECT_STATIONS_ACTIVES =
+            "SELECT id_station, nom_station FROM Station";
+
+    public static final String INSERT_FENETRE_COM =
+            "INSERT INTO FenetreCommunication (id_satellite, id_station, date_heure_debut, duree, elevation_max, id_statut) VALUES (?, ?, ?, ?, ?, (SELECT id_statut FROM Statut WHERE type_statut = 'FenetreCommunication' AND nom_statut LIKE 'Planifi%' LIMIT 1))";
+
+    public static final String SELECT_MISSIONS_ACTIVES =
+            "SELECT m.id_mission, m.nom_mission, st.nom_statut FROM Mission m JOIN Statut st ON m.id_statut = st.id_statut";
+
+    public static final String CHECK_PARTICIPATION =
+            "SELECT COUNT(*) FROM Participe WHERE id_satellite = ? AND id_mission = ?";
+
+    public static final String INSERT_PARTICIPATION =
+            "INSERT INTO Participe (id_satellite, id_mission, role_satellite) VALUES (?, ?, ?)";
+
+    public static final String SELECT_STATUT_MISSION =
+            "SELECT st.nom_statut FROM Mission m JOIN Statut st ON m.id_statut = st.id_statut WHERE m.id_mission = ?";
+
+    public static final String SELECT_ID_STATUT_DESORBITE =
+            "SELECT id_statut FROM Statut WHERE type_statut = 'Satellite' AND nom_statut LIKE 'Désorbit%' LIMIT 1";
 }
